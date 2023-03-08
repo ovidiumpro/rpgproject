@@ -33,15 +33,22 @@ namespace RPG.Movement
 
             RaycastHit hit;
             bool hasHit = Physics.Raycast(ray, out hit);
+
             if (hasHit)
             {
                 targetPosition = hit.point;
+                if (!move)
+                {
+                    return HasPath(targetPosition);
+                }
+
                 //calculate angle difference between new direction and current
                 Vector3 direction = targetPosition - transform.position;
                 float angleDifference = Vector3.Angle(transform.forward, direction);
                 //decide to manually rotate char or not based on angle diff. This is to avoid having deceleration because of rotation
                 if (angleDifference > maxAngleDifference)
                 {
+                    Debug.Log("looking");
                     // Rotate the character manually
                     transform.LookAt(targetPosition);
                     agent.updateRotation = false;
@@ -63,9 +70,10 @@ namespace RPG.Movement
 
         public bool MoveTo(Vector3 destination)
         {
+            agent.isStopped = false;
             // Check if a path exists between the character's current position and the target position
-            NavMeshPath path = new NavMeshPath();
-            if (agent.CalculatePath(destination, path))
+
+            if (HasPath(destination))
             {
                 // A path exists, set the destination for the NavMeshAgent
                 agent.SetDestination(destination);
@@ -77,6 +85,16 @@ namespace RPG.Movement
                 Debug.LogWarning("No path exists to the target position!");
                 return false;
             }
+        }
+        private bool HasPath(Vector3 destination)
+        {
+            NavMeshPath path = new NavMeshPath();
+            return agent.CalculatePath(destination, path);
+        }
+
+        public void Stop()
+        {
+            agent.isStopped = true;
         }
         private void UpdateAnimator()
         {
