@@ -26,12 +26,10 @@ namespace RPG.Control
             {
                 UpdateCombat();
             }
-            if (Input.GetMouseButtonDown(0) || Input.GetMouseButton(0))
+
+            if (!UpdateMovement(Input.GetMouseButtonDown(0) || Input.GetMouseButton(0)))
             {
-                if (!UpdateMovement()) {
-                    print("Not a good target");
-                }
-                
+                print("Not a good target");
             }
 
 
@@ -53,10 +51,10 @@ namespace RPG.Control
 
         }
 
-        private bool UpdateMovement()
+        private bool UpdateMovement(bool mouseClicked)
         {
 
-            return mover.MoveToRayIfHit(GetMouseRay());
+            return mover.MoveToRayIfHit(GetMouseRay(), mouseClicked);
 
         }
 

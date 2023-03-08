@@ -28,9 +28,9 @@ namespace RPG.Movement
             UpdateAnimator();
         }
 
-        public bool MoveToRayIfHit(Ray ray)
+        public bool MoveToRayIfHit(Ray ray, bool move)
         {
-            
+
             RaycastHit hit;
             bool hasHit = Physics.Raycast(ray, out hit);
             if (hasHit)
@@ -52,7 +52,11 @@ namespace RPG.Movement
                     agent.updateRotation = true;
                 }
                 desiredVelocity = direction.normalized * agent.speed;
-                hasHit = MoveTo(targetPosition);
+                if (move)
+                {
+                    hasHit = MoveTo(targetPosition);
+                }
+
             }
             return hasHit;
         }
