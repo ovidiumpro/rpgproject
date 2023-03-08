@@ -7,7 +7,7 @@ namespace RPG.Combat
     public class Fighter : MonoBehaviour
     {
         [SerializeField]
-        private float range = 2f;
+        private float weaponRange = 2f;
         Transform target;
         private Mover mover;
 
@@ -19,8 +19,8 @@ namespace RPG.Combat
         {
             if (target != null)
             {
-                float distance = Vector3.Distance(transform.position, target.position);
-                if (distance > range)
+                
+                if (IsNotInRange())
                 {
                     mover.MoveTo(target.position);
                 }
@@ -31,10 +31,16 @@ namespace RPG.Combat
 
             }
         }
+        private bool IsNotInRange() {
+            return Vector3.Distance(transform.position, target.position) >weaponRange;
+        }
         public void Attack(CombatTarget combatTarget)
         {
             print("Attacking a target");
             target = combatTarget.transform;
+        }
+        public void Cancel() {
+            target = null;
         }
     }
 }

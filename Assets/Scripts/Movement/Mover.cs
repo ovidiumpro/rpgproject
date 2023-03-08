@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using RPG.Combat;
 
 namespace RPG.Movement
 {
@@ -15,10 +16,12 @@ namespace RPG.Movement
         private NavMeshAgent agent;
         private Vector3 targetPosition;
         private Vector3 desiredVelocity;
+        private Fighter fighter;
 
         void Start()
         {
             agent = GetComponent<NavMeshAgent>();
+            fighter = GetComponent<Fighter>();
         }
 
         void Update()
@@ -61,6 +64,7 @@ namespace RPG.Movement
                 desiredVelocity = direction.normalized * agent.speed;
                 if (move)
                 {
+                    fighter.Cancel();
                     hasHit = MoveTo(targetPosition);
                 }
 
@@ -95,6 +99,8 @@ namespace RPG.Movement
         public void Stop()
         {
             agent.isStopped = true;
+            GetComponent<Animator>().SetFloat("ForwardSpeed", 0f);
+            desiredVelocity = Vector3.zero;
         }
         private void UpdateAnimator()
         {
