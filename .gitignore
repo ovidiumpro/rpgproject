@@ -1,0 +1,35 @@
+# Unity generated files
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+
+# Visual Studio / MonoDevelop generated files
+.vs/
+[Oo]bj/
+[Bb]in/
+
+# Build artifacts
+*.apk
+*.unitypackage
+
+# Unity meta files
+*.meta
+
+# Texture and Mesh import settings
+*.import
+
+# Cache files
+Library/
+Cache/
+
+# Project settings
+ProjectSettings/
+UserSettings/
+*.csproj
+*.sln
+
+# Generated file on MacOS
+.DS_Store
+
+# VS Code settings
+.vscode/
