@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using RPG.Combat;
+using RPG.Core;
 
 namespace RPG.Movement
 {
-    public class Mover : MonoBehaviour
+    public class Mover : MonoBehaviour, IAction
     {
         public float maxAngleDifference = 120f; // the maximum angle difference between current direction and desired direction for manual rotation
         public float manualRotationSpeed = 360f; // the rotation speed when manually rotating the character
@@ -16,12 +16,12 @@ namespace RPG.Movement
         private NavMeshAgent agent;
         private Vector3 targetPosition;
         private Vector3 desiredVelocity;
-        private Fighter fighter;
+        private ActionScheduler scheduler;
 
         void Start()
         {
             agent = GetComponent<NavMeshAgent>();
-            fighter = GetComponent<Fighter>();
+            scheduler = GetComponent<ActionScheduler>();
         }
 
         void Update()
@@ -36,40 +36,35 @@ namespace RPG.Movement
 
             RaycastHit hit;
             bool hasHit = Physics.Raycast(ray, out hit);
+            if (!hasHit) return false;
 
-            if (hasHit)
+            targetPosition = hit.point;
+            if (!move)
             {
-                targetPosition = hit.point;
-                if (!move)
-                {
-                    return HasPath(targetPosition);
-                }
-
-                //calculate angle difference between new direction and current
-                Vector3 direction = targetPosition - transform.position;
-                float angleDifference = Vector3.Angle(transform.forward, direction);
-                //decide to manually rotate char or not based on angle diff. This is to avoid having deceleration because of rotation
-                if (angleDifference > maxAngleDifference)
-                {
-                    Debug.Log("looking");
-                    // Rotate the character manually
-                    transform.LookAt(targetPosition);
-                    agent.updateRotation = false;
-                }
-                else
-                {
-                    // Use the NavMeshAgent's rotation
-                    agent.updateRotation = true;
-                }
-                desiredVelocity = direction.normalized * agent.speed;
-                if (move)
-                {
-                    fighter.Cancel();
-                    hasHit = MoveTo(targetPosition);
-                }
-
+                return HasPath(targetPosition);
             }
+            scheduler.StartAction(this);
+            //calculate angle difference between new direction and current
+            Vector3 direction = targetPosition - transform.position;
+            float angleDifference = Vector3.Angle(transform.forward, direction);
+            //decide to manually rotate char or not based on angle diff. This is to avoid having deceleration because of rotation
+            if (angleDifference > maxAngleDifference)
+            {
+                Debug.Log("looking");
+                // Rotate the character manually
+                transform.LookAt(targetPosition);
+                agent.updateRotation = false;
+            }
+            else
+            {
+                // Use the NavMeshAgent's rotation
+                agent.updateRotation = true;
+            }
+            desiredVelocity = direction.normalized * agent.speed;
+            hasHit = MoveTo(targetPosition);
             return hasHit;
+
+
         }
 
         public bool MoveTo(Vector3 destination)
@@ -96,7 +91,7 @@ namespace RPG.Movement
             return agent.CalculatePath(destination, path);
         }
 
-        public void Stop()
+        public void Cancel()
         {
             agent.isStopped = true;
             GetComponent<Animator>().SetFloat("ForwardSpeed", 0f);
