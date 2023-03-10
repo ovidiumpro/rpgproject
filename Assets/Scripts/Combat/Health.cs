@@ -6,11 +6,30 @@ namespace RPG.Combat
 {
     public class Health : MonoBehaviour
     {
-        public float health = 20f;
+        public float healthPoints = 20f;
+        private Animator animator;
+        bool isDead = false;
+        public void Start() {
+            animator = GetComponent<Animator>();
+        }
+
+        public bool IsDead() {
+            return isDead;
+        }
 
         public void TakeDamage(float damageValue) {
-            health = Mathf.Max(0, health - damageValue);
-            print("Current Health of " + this.GetType().ToString() + " is: " + health);
+            healthPoints = Mathf.Max(0, healthPoints - damageValue);
+            print("Current Health of " + this.GetType().ToString() + " is: " + healthPoints);
+            if (healthPoints == 0 && !isDead)
+            {
+                Die();
+            }
+        }
+
+        private void Die()
+        {
+            animator.SetTrigger("die");
+            isDead = true;
         }
     }
 

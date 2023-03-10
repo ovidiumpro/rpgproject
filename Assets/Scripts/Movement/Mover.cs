@@ -17,11 +17,13 @@ namespace RPG.Movement
         private Vector3 targetPosition;
         private Vector3 desiredVelocity;
         private ActionScheduler scheduler;
+        private Animator animator;
 
         void Start()
         {
             agent = GetComponent<NavMeshAgent>();
             scheduler = GetComponent<ActionScheduler>();
+            animator = GetComponent<Animator>();
         }
 
         void Update()
@@ -94,7 +96,7 @@ namespace RPG.Movement
         public void Cancel()
         {
             agent.isStopped = true;
-            GetComponent<Animator>().SetFloat("ForwardSpeed", 0f);
+            animator.SetFloat("ForwardSpeed", 0f);
             desiredVelocity = Vector3.zero;
         }
         private void UpdateAnimator()
@@ -108,7 +110,8 @@ namespace RPG.Movement
             // Update the animator with the speed
             Vector3 localVel = transform.InverseTransformDirection(agent.velocity);
             float speed = localVel.z;
-            GetComponent<Animator>().SetFloat("ForwardSpeed", speed);
+            animator.SetFloat("ForwardSpeed", speed);
+            
         }
 
 

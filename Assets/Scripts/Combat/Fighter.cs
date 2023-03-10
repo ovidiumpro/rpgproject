@@ -15,11 +15,11 @@ namespace RPG.Combat
         [SerializeField]
         private float damage = 5f;
         Transform target;
+        Health targetHealth;
         private Mover mover;
         private ActionScheduler scheduler;
         private Animator animator;
         private float timeSinceLastAttack = 0;
-        private bool isAttacking = false;
 
 
         private void Start()
@@ -30,21 +30,26 @@ namespace RPG.Combat
         }
         public void Update()
         {
+
             timeSinceLastAttack += Time.deltaTime;
-            if (target != null)
+            if (target == null) return;
+            if (targetHealth.IsDead()) return;
+            if (IsNotInRange())
             {
-
-                if (IsNotInRange())
-                {
-                    mover.MoveTo(target.position);
-                }
-                else
-                {
-                    mover.Cancel();
-                    AttackBehaviour();
-                }
-
+                mover.MoveTo(target.position);
             }
+            else
+            {
+                mover.Cancel();
+                transform.LookAt(target.position);
+                AttackBehaviour();
+            }
+
+
+        }
+        public bool canAttack(CombatTarget target)
+        {
+            return target != null && !target.GetComponent<Health>().IsDead();
         }
 
         private void AttackBehaviour()
@@ -52,6 +57,7 @@ namespace RPG.Combat
             if (timeSinceLastAttack >= timeBetweenAttacks)
             {
                 //this will trigger the Hit() event which belongs to the animation in the state triggered
+                animator.ResetTrigger("stopAttack");
                 animator.SetTrigger("attack");
                 timeSinceLastAttack = 0;
                 return;
@@ -60,6 +66,7 @@ namespace RPG.Combat
         //Animation event 
         void Hit()
         {
+            if (!target) { return; }
             target.GetComponent<Health>().TakeDamage(damage);
         }
 
@@ -72,15 +79,14 @@ namespace RPG.Combat
             print("Attacking a target");
             scheduler.StartAction(this);
             target = combatTarget.transform;
+            targetHealth = target.GetComponent<Health>();
         }
         public void Cancel()
         {
             target = null;
-            if (animator.GetBool("attack"))
-            {
-                print("Target is currently attacking, so cancelling attack");
-                animator.ResetTrigger("attack");
-            }
+            print("Target is currently attacking, so cancelling attack");
+            animator.ResetTrigger("attack");
+            animator.SetTrigger("stopAttack");
         }
 
     }

@@ -29,7 +29,7 @@ namespace RPG.Control
 
             if (!UpdateMovement(Input.GetMouseButtonDown(0) || Input.GetMouseButton(0)))
             {
-                print("Not a good target");
+                
             }
 
 
@@ -38,17 +38,19 @@ namespace RPG.Control
         private bool UpdateCombat()
         {
 
-            List<RaycastHit> hitList = new List<RaycastHit>(Physics.RaycastAll(GetMouseRay()));
-            RaycastHit hit = hitList.FirstOrDefault(h => h.collider.gameObject.GetComponent<CombatTarget>() != null);
-            if (hit.collider != null)
+            // List<RaycastHit> hitList = new List<RaycastHit>(Physics.RaycastAll(GetMouseRay()));
+            // RaycastHit hit = hitList.FirstOrDefault(h => h.collider.gameObject.GetComponent<CombatTarget>() != null);
+            RaycastHit[] hits = Physics.RaycastAll(GetMouseRay());
+            foreach (RaycastHit hit in hits)
             {
-                fighter.Attack(hit.transform.GetComponent<CombatTarget>());
+                CombatTarget target = hit.transform.GetComponent<CombatTarget>();
+                if (!fighter.canAttack(target)) continue;
+
+                fighter.Attack(target);
                 return true;
+
             }
             return false;
-
-
-
         }
 
         private bool UpdateMovement(bool mouseClicked)
