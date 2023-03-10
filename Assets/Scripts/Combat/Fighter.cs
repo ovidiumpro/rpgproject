@@ -36,7 +36,7 @@ namespace RPG.Combat
             if (targetHealth.IsDead()) return;
             if (IsNotInRange())
             {
-                mover.MoveTo(target.position);
+                mover.MoveTo(target.position, false);
             }
             else
             {
@@ -47,7 +47,7 @@ namespace RPG.Combat
 
 
         }
-        public bool canAttack(CombatTarget target)
+        public bool canAttack(GameObject target)
         {
             return target != null && !target.GetComponent<Health>().IsDead();
         }
@@ -74,7 +74,7 @@ namespace RPG.Combat
         {
             return Vector3.Distance(transform.position, target.position) > weaponRange;
         }
-        public void Attack(CombatTarget combatTarget)
+        public void Attack(GameObject combatTarget)
         {
             print("Attacking a target");
             scheduler.StartAction(this);

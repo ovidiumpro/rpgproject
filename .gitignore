@@ -33,3 +33,6 @@ UserSettings/
 
 # VS Code settings
 .vscode/
+
+# Logs
+Logs/

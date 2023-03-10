@@ -28,6 +28,11 @@ namespace RPG.Core
             print("starting action: "+action.GetType().ToString());
             currentAction = action;
         }
+        public void ClearSchedule() {
+            if (currentAction == null) return;
+            currentAction.Cancel();
+        }
+        
     }
     
 }

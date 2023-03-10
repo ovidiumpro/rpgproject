@@ -11,6 +11,10 @@ PrefabInstance:
       propertyPath: health
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 2085597520830363460, guid: aba7b0912f9815b459c172b8f7f04c66, type: 3}
+      propertyPath: healthPoints
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 8103028360562054256, guid: aba7b0912f9815b459c172b8f7f04c66, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -57,6 +61,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8103028360562054260, guid: aba7b0912f9815b459c172b8f7f04c66, type: 3}
       propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 8103028360562054260, guid: aba7b0912f9815b459c172b8f7f04c66, type: 3}
+      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []

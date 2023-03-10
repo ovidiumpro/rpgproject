@@ -44,9 +44,9 @@ namespace RPG.Control
             foreach (RaycastHit hit in hits)
             {
                 CombatTarget target = hit.transform.GetComponent<CombatTarget>();
-                if (!fighter.canAttack(target)) continue;
+                if (!fighter.canAttack(target.gameObject)) continue;
 
-                fighter.Attack(target);
+                fighter.Attack(target.gameObject);
                 return true;
 
             }
