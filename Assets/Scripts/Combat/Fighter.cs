@@ -19,7 +19,7 @@ namespace RPG.Combat
         private Mover mover;
         private ActionScheduler scheduler;
         private Animator animator;
-        private float timeSinceLastAttack = 0;
+        private float timeSinceLastAttack = Mathf.Infinity;
 
 
         private void Start()
@@ -31,7 +31,7 @@ namespace RPG.Combat
         public void Update()
         {
 
-            timeSinceLastAttack += Time.deltaTime;
+            timeSinceLastAttack = Mathf.Min(timeBetweenAttacks,timeSinceLastAttack+Time.deltaTime);
             if (target == null) return;
             if (targetHealth.IsDead()) return;
             if (IsNotInRange())
@@ -76,7 +76,6 @@ namespace RPG.Combat
         }
         public void Attack(GameObject combatTarget)
         {
-            print("Attacking a target");
             scheduler.StartAction(this);
             target = combatTarget.transform;
             targetHealth = target.GetComponent<Health>();
@@ -84,7 +83,6 @@ namespace RPG.Combat
         public void Cancel()
         {
             target = null;
-            print("Target is currently attacking, so cancelling attack");
             animator.ResetTrigger("attack");
             animator.SetTrigger("stopAttack");
         }

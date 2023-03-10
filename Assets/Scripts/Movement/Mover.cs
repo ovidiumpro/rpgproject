@@ -18,17 +18,19 @@ namespace RPG.Movement
         private Vector3 desiredVelocity;
         private ActionScheduler scheduler;
         private Animator animator;
+        private Health health;
 
         void Start()
         {
             agent = GetComponent<NavMeshAgent>();
             scheduler = GetComponent<ActionScheduler>();
             animator = GetComponent<Animator>();
+            health = GetComponent<Health>();
         }
 
         void Update()
         {
-
+            agent.enabled = !health.IsDead();
 
             UpdateAnimator();
         }

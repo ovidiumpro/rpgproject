@@ -5,6 +5,7 @@ using RPG.Movement;
 using RPG.Combat;
 using System;
 using System.Linq;
+using RPG.Core;
 
 namespace RPG.Control
 {
@@ -12,16 +13,22 @@ namespace RPG.Control
     {
         private Mover mover;
         private Fighter fighter;
+        private Health health;
         // Start is called before the first frame update
         void Start()
         {
             mover = GetComponent<Mover>();
             fighter = GetComponent<Fighter>();
+            health = GetComponent<Health>();
         }
 
         // Update is called once per frame
         void Update()
         {
+            if (health.IsDead())
+            {
+                return;
+            }
             if (Input.GetMouseButtonDown(1) || Input.GetMouseButton(1))
             {
                 UpdateCombat();
@@ -44,7 +51,7 @@ namespace RPG.Control
             foreach (RaycastHit hit in hits)
             {
                 CombatTarget target = hit.transform.GetComponent<CombatTarget>();
-                if (!fighter.canAttack(target.gameObject)) continue;
+                if (target == null || !fighter.canAttack(target.gameObject)) continue;
 
                 fighter.Attack(target.gameObject);
                 return true;

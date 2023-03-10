@@ -31,15 +31,11 @@ namespace RPG.Control
         {
             if (health.IsDead())
             {
-                scheduler.ClearSchedule();
                 return;
             }
-            if (IsInChaseRange())
+            if (IsInChaseRange() && fighter.canAttack(player))
             {
-                if (fighter.canAttack(player))
-                {
                     fighter.Attack(player);
-                }
             }
             else
             {
@@ -50,6 +46,11 @@ namespace RPG.Control
         private bool IsInChaseRange()
         {
             return Vector3.Distance(transform.position, player.transform.position) <= chaseDistance;
+        }
+
+        void OnDrawGizmosSelected() {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, chaseDistance);
         }
     }
 

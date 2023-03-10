@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2c6a766923a2b948bdae1381c63e277, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chaseDistance: 9
+  chaseDistance: 7.5
 --- !u!4 &6758471532901752572 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8103028360562054256, guid: aba7b0912f9815b459c172b8f7f04c66, type: 3}
